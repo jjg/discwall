@@ -131,6 +131,8 @@
 					
 					var disc_tracks = selected_disc.tracks; 
 
+					$('#albumViewTracks tbody').empty();
+					
 					for(var i=0;i<disc_tracks.length;i++){
 
 						var track_id = disc_tracks[i]['id'];
@@ -141,6 +143,7 @@
 						
 						track_number = i + 1;
 						
+					
 						$('#albumViewTracks tbody:last').append('<tr><td>' + track_number + '</td><td><a href=\'#\' onClick=\'playTrack(' + track_id + ')\'>' + track_title + '</a></td></tr>');
 						
 					}
