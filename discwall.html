@@ -58,6 +58,7 @@
 			var authToken = null;
 			var selected_disc = null;
 			var selected_track = 0;
+			var selected_track_length = 0;
 			var player = null;
 			
 			$(document).ready(function(){
@@ -175,21 +176,12 @@
 					var mediaUrl = '1.flac';
 					//var mediaUrl = data.track.url;
 					
-					// let's try FLAC!
+					// stop the player if it's instansiated...
 					if(player){
 						player.stop();
 					}
 					
 					player = Player.fromURL(mediaUrl);
-					
-					player.on('progress', function(e){
-						//progress_percent = 0
-						//progress_percent = (e / length) * 100;
-						//console.log(progress_percent + '%');
-	
-						//console.log(e + ' out of ' + length);
-					});
-					
 					
 					player.on('error', function(e){
 						console.log(e);
@@ -197,15 +189,23 @@
 					
 					player.on('metadata', function(data) {
 	                
-		                console.log(data);
+	                	//console.log(data);
+	                
+	                	// save the length for playback percent calcs
+		                selected_track_length = data['length'];
 	
 		            });
+		            
+					player.on('progress', function(e){
+						
+						//console.log(selected_track_length);
+						
+						progress_percent = 0
+						progress_percent = (e / selected_track_length) * 100;
+						//console.log(progress_percent + '%');
+					});
 	            
 					player.play();
-					
-					// play the file
-					//audio_player.setAttribute('src', mediaUrl);
-					//audio_player.play();
 				});
 			}
 			
@@ -268,8 +268,5 @@
 
 		<ul id="disc_wall" class="music">
 		</ul>
-		
-		<audio id="audio_player" onended="nextTrack()"></audio>
-
 	</body>
 </html>
