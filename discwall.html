@@ -123,17 +123,15 @@
 			function loadDisc(discId){
 				$.getJSON('https://www.murfie.com/api/discs/' + discId + '.json', function(data){
 
-					// debug
-					console.log(data);
-
-					var disc_tracks = data['disc']['tracks'];
+					var disc_tracks = data.disc.tracks; 
 
 					for(var i=0;i<disc_tracks.length;i++){
 
 						var track_id = disc_tracks[i]['id'];
 						var track_title = disc_tracks[i]['title'];
 						var track_duration = disc_tracks[i]['duration'];
-
+						
+						console.log(track_id + ':' + track_title + ':' + track_duration);
 						
 					}
 
