@@ -210,6 +210,37 @@
 			}
 			
 			function nextTrack(){
+			
+				console.log('current selected_track: ' + selected_track);
+				
+				var new_selected_track = selected_track;
+				
+				// find the next track (if there is one)
+				for(i=0;i<selected_disc.tracks.length;i++){
+					
+					if(selected_disc.tracks[i].id == selected_track){
+					
+						var newIndex = i + 1;
+						
+						if(newIndex < selected_disc.tracks.length){
+						
+							new_selected_track = selected_disc.tracks[newIndex]['id'];
+						}
+					}
+				}
+				
+				if(new_selected_track == selected_track){
+					selected_track = 0;
+				} else {
+					selected_track = new_selected_track;
+				}
+				
+				console.log('new selected_track: ' + selected_track);
+				
+				// play it!
+				if(selected_track != 0){
+					playTrack(selected_track);
+				}
 			}
 			
 		</script>
