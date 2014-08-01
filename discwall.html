@@ -94,27 +94,32 @@
 
 				authToken = null;
 
-				$.post('https://www.murfie.com/api/tokens', {email:memberEmail, password:memberPassword})
+				$.post('https://api.murfie.com/api/tokens', {email:memberEmail, password:memberPassword})
 				.done(function(data){
 
-					authToken = data['user']['token'];
+					// debug
+					console.log(data);
+					
+					var authResult = JSON.parse(data);
+					
+					authToken = authResult.user.token; // data['user']['token'];
 
 					callback(authToken);
 				})
 				.fail(function(){
 					callback(null);
-				});				
+				});
 			}
 
 			function loadDiscs(authToken){
 
 				// load the discs!
-				$.getJSON('https://www.murfie.com/api/discs.json?auth_token=' + authToken, function(data){
+				$.getJSON('https://api.murfie.com/api/discs.json?auth_token=' + authToken, function(data){
 
 					for(var i=0;i<data.length;i++){
 
 						var disc_id = data[i]['disc']['id'];
-						var disc_title = data[i]['disc']['album']['title'];				
+						var disc_title = data[i]['disc']['album']['title'];
 						var disc_album_art = data[i]['disc']['album']['album_art'];
 						var disc_artist_name = data[i]['disc']['album']['main_artist'];
 						var disc_album_url = data[i]['disc']['album']['url'];
@@ -125,11 +130,11 @@
 			}
 
 			function loadDisc(discId){
-				$.getJSON('https://www.murfie.com/api/discs/' + discId + '.json', function(data){
+				$.getJSON('https://api.murfie.com/api/discs/' + discId + '.json', function(data){
 
 					selected_disc = data.disc;
 					
-					var disc_tracks = selected_disc.tracks; 
+					var disc_tracks = selected_disc.tracks;
 
 					$('#albumViewTracks tbody').empty();
 					
@@ -170,14 +175,13 @@
 				selected_track = track_id;
 				
 				// get the url for this track
-				$.getJSON('https://www.murfie.com/api/discs/' + selected_disc.id + '/tracks/' + track_id + '.json?media_format=flac&auth_token=' + authToken, function(data){
+				$.getJSON('https://api.murfie.com/api/discs/' + selected_disc.id + '/tracks/' + track_id + '.json?media_format=flac&auth_token=' + authToken, function(data){
 				
 					// debug
 					console.log(data.track.url);
 					
-					// debug while dealing with CORS issues...
-					var mediaUrl = '1.flac';
-					//var mediaUrl = data.track.url;
+					//var mediaUrl = '1.flac';
+					var mediaUrl = data.track.url;
 					
 					// stop the player if it's instansiated...
 					if(player){
@@ -251,7 +255,7 @@
 	<body>
 		
 		<div id="loginForm" class="modal hide fade">
-			<div class="modal-header">				
+			<div class="modal-header">
 				<h3>Login to Murfie</h3>
 			</div>
 			<div class="modal-body">
@@ -264,7 +268,7 @@
 					</div>
 					<div class="control-group">
 						<label class="control-label" for="inputPassword">password</label>
-						<div class="controls">						
+						<div class="controls">
 							<input id="inputPassword" type="password" placeholder="secret">
 						</div>
 					</div>
@@ -278,7 +282,7 @@
 		<div id="albumView" class="modal hide fade">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h3 id="albumViewArtist">Artist</h3>				
+				<h3 id="albumViewArtist">Artist</h3>
 			</div>
 			<div class="modal-body">
 				<div class="media">
